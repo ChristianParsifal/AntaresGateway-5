@@ -30,7 +30,7 @@
   },
   "devDependencies": {
     "@electron/asar": "3.4.1",
-    "electron": "^45.2.2",
+    "electron": "^45.4.1",
     "electron-builder": "^26.18.0"
   },
   "overrides": {
