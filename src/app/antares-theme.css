@@ -1,0 +1,550 @@
+/* AntaresGateway 4 appearance on top of the existing UI kit. The persisted
+   "editions" key continues to select the default palette for existing installs. */
+html.ci-theme:root[data-ci-appearance="editions"] {
+  --ci-color-background: #faf8fc;
+  --antares-sidebar: rgb(252 249 255 / 0.83);
+  --antares-shadow: 0 8px 24px -16px rgb(64 32 85 / 0.2), inset 0 1px rgb(255 255 255 / 0.55);
+  --ci-color-surface: #fff;
+  --ci-color-surface-subtle: #f4eef8;
+  --ci-color-surface-muted: #ede4f4;
+  --ci-color-foreground: #211a26;
+  --ci-color-text-muted: #6e6376;
+  --ci-color-text-subtle: #776b7f;
+  --ci-color-accent: #8730c1;
+  --ci-color-accent-hover: #7421a9;
+  --ci-color-accent-active: #7421a9;
+  --ci-color-accent-ink: #7421a9;
+  --ci-color-accent-surface-subtle: rgb(144 50 208 / 0.1);
+  --ci-color-accent-surface-strong: rgb(144 50 208 / 0.16);
+  --ci-color-border-subtle: rgb(79 51 95 / 0.15);
+  --ci-color-border: rgb(79 51 95 / 0.24);
+  --ci-color-focus-ring: #8730c1;
+  --ci-sidebar-active-bg: rgb(144 50 208 / 0.1);
+}
+
+html.ci-theme:root[data-ci-appearance="editions"][data-theme="dark"] {
+  --ci-color-background: #0a0a0b;
+  --antares-sidebar: rgb(10 9 12 / 0.86);
+  --antares-shadow: 0 8px 24px -16px rgb(0 0 0 / 0.32), inset 0 1px rgb(255 255 255 / 0.025);
+  --ci-color-surface: #19151d;
+  --ci-color-surface-subtle: #241b2b;
+  --ci-color-surface-muted: #2d2236;
+  --ci-color-foreground: #f7f5fa;
+  --ci-color-text-muted: #c9bfd0;
+  --ci-color-text-subtle: #b5adb9;
+  --ci-color-accent: #8529c8;
+  --ci-color-accent-hover: #9639d4;
+  --ci-color-accent-active: #e2baff;
+  --ci-color-accent-ink: #e2baff;
+  --ci-color-accent-surface-subtle: rgb(164 91 218 / 0.16);
+  --ci-color-accent-surface-strong: rgb(164 91 218 / 0.24);
+  --ci-color-border-subtle: rgb(255 255 255 / 0.105);
+  --ci-color-border: rgb(255 255 255 / 0.18);
+  --ci-color-focus-ring: #cf92ff;
+  --ci-sidebar-active-bg: rgb(164 91 218 / 0.16);
+}
+
+html.ci-theme:root[data-ci-appearance="editions"] {
+  --ci-color-canvas: var(--ci-color-background);
+  --ci-color-heading: var(--ci-color-foreground);
+  --ci-color-text: var(--ci-color-foreground);
+  --ci-color-accent-foreground: #fff;
+  --ci-color-control-active-bg: var(--ci-color-accent);
+  --ci-color-control-active-fg: var(--ci-color-accent-foreground);
+  --ci-color-focus: var(--ci-color-focus-ring);
+  --ci-badge-accent-ink: var(--ci-color-accent-ink);
+  --ci-button-primary-bg: var(--ci-color-accent);
+  --ci-button-primary-fg: var(--ci-color-accent-foreground);
+  --ci-button-primary-hover: var(--ci-color-accent-hover);
+  --ci-button-accent-bg: var(--ci-color-accent);
+  --ci-button-accent-fg: var(--ci-color-accent-foreground);
+  --ci-sidebar-active-fg: var(--ci-color-foreground);
+  --ci-chart-1: var(--ci-color-accent);
+  --ci-chart-1-ink: var(--ci-color-accent-ink);
+  --ci-chart-1-subtle: var(--ci-color-accent-surface-strong);
+  --ci-radius-surface: 16px;
+  --ci-radius-control: 10px;
+}
+
+/* Keep the picked hue for decorative surfaces and derive readable ink separately. */
+html.ci-theme:root[data-antares-custom-accent][data-theme] {
+  --ci-color-background: color-mix(in srgb, var(--antares-custom-accent) 6%, #faf8fc);
+  --ci-color-accent: var(--antares-custom-accent);
+  --ci-color-accent-ink: color-mix(in srgb, var(--antares-custom-accent) 42%, #141019);
+  --ci-color-accent-active: var(--ci-color-accent-ink);
+  --ci-color-accent-hover: var(--ci-color-accent-ink);
+  --ci-badge-accent-ink: var(--ci-color-accent-ink);
+  --color-primary-ink: var(--ci-color-accent-ink);
+  --ci-color-accent-surface-subtle: color-mix(
+    in srgb,
+    var(--antares-custom-accent) 13%,
+    transparent
+  );
+  --ci-color-accent-surface-strong: color-mix(
+    in srgb,
+    var(--antares-custom-accent) 24%,
+    transparent
+  );
+  --ci-color-focus-ring: var(--ci-color-accent-ink);
+  --ci-color-focus: var(--ci-color-focus-ring);
+  --ci-sidebar-active-bg: var(--ci-color-accent-surface-subtle);
+  --ci-sidebar-active-fg: var(--ci-color-foreground);
+  --ci-button-primary-bg: color-mix(in srgb, var(--antares-custom-accent) 43%, black);
+  --ci-button-primary-hover: color-mix(in srgb, var(--antares-custom-accent) 36%, black);
+  --ci-button-primary-fg: white;
+  --ci-button-accent-bg: var(--ci-button-primary-bg);
+  --ci-button-accent-fg: white;
+  --ci-color-control-active-bg: var(--ci-button-primary-bg);
+  --ci-color-control-active-fg: white;
+  --ci-color-canvas: var(--ci-color-background);
+  --ci-chart-1: var(--ci-color-accent);
+  --ci-chart-1-ink: var(--ci-color-accent-ink);
+  --ci-chart-1-subtle: var(--ci-color-accent-surface-strong);
+}
+
+html.ci-theme:root[data-antares-custom-accent][data-theme="dark"] {
+  --ci-color-background: color-mix(in srgb, var(--antares-custom-accent) 8%, #0a0a0b);
+  --ci-color-accent-ink: color-mix(in srgb, var(--antares-custom-accent) 32%, white);
+}
+
+html.ci-theme:root {
+  --antares-light-tint: var(--antares-custom-accent, var(--ci-color-accent));
+  --antares-light-strength: 32%;
+  --antares-card-fill: var(--ci-color-surface);
+}
+
+html.ci-theme:root[data-theme="dark"] {
+  --antares-light-strength: 72%;
+}
+
+html.ci-theme:root body {
+  min-height: 100vh;
+  isolation: isolate;
+}
+
+/* Move the gradient layers with transforms; content and blur radii stay still. */
+html.ci-theme:root body::before,
+html.ci-theme:root body::after {
+  content: "";
+  position: fixed;
+  z-index: -1;
+  pointer-events: none;
+  width: min(88vw, 1100px);
+  height: min(76vh, 680px);
+  top: -27vh;
+  left: -22vw;
+  background: radial-gradient(
+    ellipse at center,
+    color-mix(in srgb, var(--antares-light-tint) var(--antares-light-strength), transparent),
+    transparent 71%
+  );
+  animation: antares-light-drift 36s ease-in-out infinite alternate;
+}
+
+html.ci-theme:root body::after {
+  left: auto;
+  right: -31vw;
+  top: -12vh;
+  opacity: 0.7;
+  animation-duration: 49s;
+  animation-delay: -19s;
+  animation-direction: alternate-reverse;
+}
+
+@keyframes antares-light-drift {
+  from {
+    transform: translate(-3%, -5%) rotate(-9deg) scale(1.08, 0.92);
+  }
+  to {
+    transform: translate(23%, 31%) rotate(16deg) scale(1.28, 1.14);
+  }
+}
+
+html.ci-theme:root[data-antares-still] body::before,
+html.ci-theme:root[data-antares-still] body::after {
+  animation: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.ci-theme:root body::before,
+  html.ci-theme:root body::after {
+    animation: none;
+  }
+}
+
+.antares-effects-slider {
+  accent-color: var(--ci-color-accent-ink);
+}
+
+.antares-effects-slider:focus-visible {
+  outline: 2px solid var(--ci-color-focus-ring);
+  outline-offset: 2px;
+}
+
+.antares-login-aside,
+.antares-shell,
+.antares-shell .ci-sidebar-inset {
+  background: transparent;
+}
+
+.antares-restart.ci-button {
+  background: #f5c344;
+  border-color: #f5c344;
+  color: #291b00;
+}
+
+.antares-restart.ci-button:hover {
+  background: #ffda73;
+  border-color: #ffda73;
+  color: #291b00;
+}
+
+.antares-stop.ci-button {
+  background: #b42332;
+  border-color: #b42332;
+  color: #fff;
+}
+
+.antares-stop.ci-button:hover {
+  background: #951b29;
+  border-color: #951b29;
+  color: #fff;
+}
+
+[data-ci-appearance="editions"] .antares-sidebar.ci-sidebar {
+  --ci-layout-sidebar: 224px;
+}
+
+[data-ci-appearance="editions"] .antares-sidebar,
+[data-ci-appearance="editions"] .antares-shell .ci-sidebar-shell-header {
+  background: var(--antares-sidebar);
+  border-color: var(--ci-color-border-subtle);
+  backdrop-filter: blur(28px) saturate(1.18);
+}
+
+[data-ci-appearance="editions"] .antares-sidebar .ci-sidebar__menu-button[data-active="true"] {
+  color: var(--ci-sidebar-active-fg);
+  background: var(--ci-sidebar-active-bg);
+  box-shadow: inset 0 0 0 1px var(--ci-color-accent-surface-strong);
+}
+
+[data-ci-appearance="editions"] .antares-sidebar .ci-sidebar__menu-button[data-active="true"] svg {
+  color: var(--ci-color-accent-ink);
+}
+
+.antares-nav {
+  position: relative;
+  isolation: isolate;
+}
+
+.antares-nav-panel {
+  position: relative;
+  padding: 4px;
+  border-radius: var(--ci-radius-surface);
+}
+
+.antares-nav-panel::before {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--ci-color-accent) 7%, var(--ci-color-background));
+  content: "";
+  pointer-events: none;
+}
+
+.antares-nav-panel .ci-sidebar__group {
+  gap: 0;
+}
+
+.antares-nav-selection {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+}
+
+.antares-nav-selection > span {
+  position: absolute;
+  border-radius: var(--ci-radius-control);
+  transform-origin: top left;
+  background: color-mix(in srgb, var(--ci-color-accent) var(--nav-strength), transparent);
+}
+
+.antares-nav-selection > [data-nav-level="1"] {
+  --nav-strength: 28%;
+}
+.antares-nav-selection > [data-nav-level="2"] {
+  --nav-strength: 20%;
+}
+.antares-nav-selection > [data-nav-level="3"] {
+  --nav-strength: 13%;
+}
+
+/* The moving surface supplies the fill; keep row text, icons and focus rings above it. */
+.antares-nav .ci-sidebar__menu-button[data-nav-current][data-active="true"] {
+  background: transparent;
+  box-shadow: none;
+  color: var(--ci-color-heading);
+}
+
+.antares-nav .ci-sidebar__menu-button[data-nav-current="0"][data-active="true"] {
+  background: color-mix(in srgb, var(--ci-color-accent) 28%, transparent);
+}
+
+.antares-nav-trigger {
+  color: var(--ci-color-heading);
+  cursor: pointer;
+}
+
+.antares-nav-trigger:focus-visible {
+  outline: none;
+  box-shadow: var(--ci-ring-focus);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .antares-nav-trigger:hover {
+    background: color-mix(in srgb, var(--ci-color-accent) 9%, transparent);
+  }
+}
+
+.antares-nav-arrow {
+  flex: none;
+  color: var(--ci-color-accent-ink);
+  transition: transform var(--ci-duration-base) var(--ci-ease-emphasized);
+}
+
+.antares-nav-trigger[aria-expanded="false"] .antares-nav-arrow {
+  transform: rotate(-90deg);
+}
+[dir="rtl"] .antares-nav-trigger[aria-expanded="false"] .antares-nav-arrow {
+  transform: rotate(90deg);
+}
+
+.antares-nav-fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--ci-duration-base) var(--ci-ease-emphasized);
+}
+
+.antares-nav-fold[data-open="true"] {
+  grid-template-rows: 1fr;
+}
+
+.antares-nav-clip {
+  min-block-size: 0;
+  overflow: clip;
+}
+
+.antares-nav-branch {
+  margin-block: 2px 4px;
+  margin-inline-start: 9px;
+  padding-inline-start: 6px;
+  border-inline-start: 1px solid color-mix(in srgb, var(--ci-color-accent) 33%, transparent);
+}
+
+.antares-nav-branch > li {
+  opacity: 0;
+  transition: opacity var(--ci-duration-fast) var(--ci-ease-emphasized);
+}
+
+.antares-nav-fold[data-open="true"] > .antares-nav-clip > .antares-nav-branch > li {
+  opacity: 1;
+  transition-delay: 75ms;
+}
+
+.antares-nav-fold[data-open="true"] > .antares-nav-clip > .antares-nav-branch > li:nth-child(1) {
+  transition-delay: 0ms;
+}
+.antares-nav-fold[data-open="true"] > .antares-nav-clip > .antares-nav-branch > li:nth-child(2) {
+  transition-delay: 45ms;
+}
+
+.antares-nav[data-nav-input="keyboard"]
+  :is(.antares-nav-fold, .antares-nav-branch > li, .antares-nav-arrow) {
+  transition: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .antares-nav :is(.antares-nav-fold, .antares-nav-branch > li, .antares-nav-arrow) {
+    transition: none;
+  }
+}
+
+html.ci-theme :is(.ci-card, .antares-glass-card) {
+  background: color-mix(
+    in srgb,
+    var(--antares-card-fill) var(--antares-card-opacity, 62%),
+    transparent
+  );
+  border-color: var(--ci-color-border-subtle);
+  border-radius: var(--ci-radius-surface);
+  box-shadow: var(--antares-shadow);
+  backdrop-filter: blur(var(--antares-card-blur, 16px));
+}
+
+.antares-logo {
+  display: inline-block;
+  flex: none;
+  object-fit: contain;
+  border-radius: 22%;
+}
+
+.antares-wordmark {
+  color: var(--ci-color-heading);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+}
+
+.antares-overview {
+  display: grid;
+  min-width: 0;
+  gap: 12px;
+}
+
+.antares-overview-panel {
+  min-width: 0;
+  padding: 16px;
+  border: 1px solid var(--ci-color-border-subtle);
+  border-radius: 16px;
+  background: var(--ci-color-surface);
+}
+
+.antares-overview-panel h3 {
+  font-size: 1rem;
+  font-weight: 650;
+}
+
+.antares-heat-scroll {
+  overflow-x: auto;
+  padding: 4px;
+  margin-block: 9px 7px;
+}
+
+.antares-heat-grid {
+  display: grid;
+  min-width: 686px;
+  grid-template: repeat(7, auto) / repeat(53, minmax(10px, 1fr));
+  grid-auto-flow: column;
+  gap: 3px;
+}
+
+.antares-heat-cell {
+  display: block;
+  aspect-ratio: 1;
+  background: var(--heat, rgb(150 138 169 / 0.12));
+  border: 1px solid var(--ci-color-border-subtle);
+  border-radius: 3px;
+}
+
+button.antares-heat-cell:hover,
+button.antares-heat-cell:focus-visible {
+  border-color: var(--ci-color-accent-ink);
+}
+
+button.antares-heat-cell:focus-visible {
+  outline: 1px solid var(--ci-color-accent-ink);
+  outline-offset: 1px;
+}
+
+.antares-heat-cell[data-level="missing"] {
+  --heat: transparent;
+  border-color: color-mix(in srgb, var(--ci-color-border-subtle) 60%, transparent);
+}
+
+.antares-heat-cell[data-level="1"] {
+  --heat: #e8d6f6;
+}
+.antares-heat-cell[data-level="2"] {
+  --heat: #d0a4ee;
+}
+.antares-heat-cell[data-level="3"] {
+  --heat: #ad6bde;
+}
+.antares-heat-cell[data-level="4"] {
+  --heat: #8730c1;
+}
+[data-theme="dark"] .antares-heat-cell[data-level="1"] {
+  --heat: #3c2059;
+}
+[data-theme="dark"] .antares-heat-cell[data-level="2"] {
+  --heat: #5b2686;
+}
+[data-theme="dark"] .antares-heat-cell[data-level="3"] {
+  --heat: #842dc3;
+}
+[data-theme="dark"] .antares-heat-cell[data-level="4"] {
+  --heat: #b04deb;
+}
+
+.antares-trend-toggle {
+  display: inline-flex;
+  align-self: flex-start;
+  gap: 2px;
+  padding: 2px;
+  border: 1px solid var(--ci-color-border-subtle);
+  border-radius: 10px;
+}
+
+.antares-trend-toggle button {
+  padding: 4px 8px;
+  border-radius: 7px;
+  color: var(--ci-color-text-muted);
+  font-size: 12px;
+}
+
+.antares-trend-toggle button[aria-pressed="true"] {
+  color: var(--ci-color-accent-ink);
+  background: var(--ci-color-accent-surface-strong);
+}
+
+.antares-overview-empty {
+  display: grid;
+  height: 100%;
+  place-items: center;
+  border: 1px dashed var(--ci-color-border-subtle);
+  border-radius: 10px;
+  padding: 12px;
+  color: var(--ci-color-text-muted);
+  text-align: center;
+  font-size: 12px;
+}
+
+.antares-rank-track {
+  height: 6px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: var(--ci-color-surface-muted);
+}
+
+.antares-rank-track > div {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--ci-color-accent), var(--ci-color-accent-ink));
+}
+
+html.ci-theme[data-antares-custom-accent] {
+  --antares-card-fill: color-mix(
+    in srgb,
+    var(--antares-custom-accent) 13%,
+    var(--ci-color-surface)
+  );
+}
+
+html.ci-theme .ci-card.ci-brand-tint {
+  background: color-mix(
+    in srgb,
+    var(--ci-brand-subtle) var(--antares-card-opacity, 62%),
+    transparent
+  );
+  border-color: var(--ci-brand-border);
+}
+
+html.ci-theme[data-antares-custom-accent]
+  :is(.antares-sidebar, .antares-shell .ci-sidebar-shell-header) {
+  background: color-mix(
+    in srgb,
+    var(--antares-custom-accent) 10%,
+    var(--antares-sidebar, var(--ci-color-background))
+  );
+}
