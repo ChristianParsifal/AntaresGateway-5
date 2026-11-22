@@ -1,61 +1,64 @@
 # AntaresGateway
 
-**A local AI gateway and desktop application built on [OmniRoute](https://github.com/cheaper-inference/OmniRoute).** Connect model providers, route requests through a common API, and inspect usage from one dashboard.
+**A local AI gateway for connecting applications, managing providers, and monitoring model usage.**
 
-This repository contains OmniRoute 3.8.54 with an Electron desktop build named AntaresGateway. Provider availability, supported models, quotas, and pricing depend on the upstream service and your account.
+AntaresGateway 5.1.0 continues the AntaresGateway 4 product line with a new gateway architecture, broader model integrations, and expanded routing capabilities. Connect your AI applications to a single endpoint and manage their upstream services from a dashboard.
+
+> **Version note:** 5.1.0 is the starting version for the new application release line. The current source and desktop package metadata still report 3.8.54; update and verify the build metadata before publishing a 5.1.0 release.
 
 - [Features](#features)
 - [Getting started](#getting-started)
-- [Connect a client](#connect-a-client)
-- [Changes from the previous Antares Gateway](#changes-from-the-previous-antares-gateway)
-- [Data and migration](#data-and-migration)
+- [Connect an application](#connect-an-application)
+- [What's changed since version 4](#whats-changed-since-version-4)
+- [Upgrading and data](#upgrading-and-data)
 - [Development](#development)
-- [Documentation](#documentation)
-- [License and credits](#license-and-credits)
+- [License](#license)
 
 ## Features
 
-- **Unified API:** OpenAI-compatible chat, Responses and model discovery endpoints, with translation for supported provider formats.
-- **Provider connections:** the catalog lists 394 providers; configure supported providers using API keys or OAuth where available. Availability and authentication vary by provider.
-- **Routing and resilience:** model combos, fallback, provider circuit breakers, connection cooldowns and model-level lockouts.
-- **Usage and operations:** a dashboard for connections, API keys, request logs, usage and costs.
-- **Additional capabilities:** embeddings, image generation, speech and transcription endpoints, subject to provider and model support.
-- **Agent integrations:** MCP and A2A servers, skills and persistent memory. See the linked guides for setup and supported transports.
-- **Deployment options:** Electron desktop builds, a Node.js server and Docker deployment.
+- **One gateway endpoint:** connect compatible applications through a shared API, with request and response translation for supported providers.
+- **Provider connections:** the catalog lists 394 providers, with API key or OAuth authentication where supported. Available models and quotas depend on the provider and account.
+- **Model routing:** configure model combinations and fallbacks, with provider circuit breakers, connection cooldowns, and model-specific lockouts.
+- **Usage dashboard:** manage connections and gateway keys, inspect request logs, and review usage and costs.
+- **More API capabilities:** chat, Responses, embeddings, image generation, speech, and transcription, depending on the selected provider and model.
+- **Agent integrations:** MCP and A2A servers, skills, and persistent memory.
+- **Flexible deployment:** Windows desktop packaging alongside Node.js server and Docker deployment options.
 
 ## Getting started
 
 ### Windows desktop
 
-Build artifacts in `electron/dist-electron/` include a Windows x64 installer and portable executable when produced by the desktop build. Run the installer or portable build from a trusted release of this project. On first launch, complete the application's setup and connect a provider.
+Download a Windows x64 installer or portable package from this project's GitHub Releases when available. Run the package, complete the initial setup, and connect a provider through the dashboard.
 
-The installer name uses `AntaresGateway.Setup.<version>.exe`; the portable build uses `AntaresGateway <version>.exe`. Desktop packaging is configured in [`electron/package.json`](electron/package.json).
+The desktop build configuration produces an installer and a portable executable in `electron/dist-electron/`. Package filenames use the version recorded in the build metadata.
 
 ### Run from source
 
-Node.js **>=22.22.2 <23 or >=24.0.0 <27** and npm are required. From the repository root:
+Requirements: Node.js **>=22.22.2 <23 or >=24.0.0 <27** and npm.
+
+From the project directory:
 
 ```bash
 npm install
 ```
 
-The install process creates `.env` from `.env.example` if needed. Before starting the server, configure `JWT_SECRET`, `API_KEY_SECRET`, and `INITIAL_PASSWORD` in `.env`. Use unique random secrets; setting an empty `INITIAL_PASSWORD` allows the onboarding wizard to create the password. The example file documents the settings and secret-generation commands.
+The installation process creates `.env` from `.env.example` when needed. Configure unique random values for `JWT_SECRET` and `API_KEY_SECRET` in `.env`. Set your own `INITIAL_PASSWORD`, or leave it empty to create a password through the onboarding wizard. See [`.env.example`](.env.example) for the configuration details.
 
 ```bash
 npm run dev
 ```
 
-Open <http://localhost:20128>, sign in, and add a provider in the dashboard. To stop the development server, press `Ctrl+C` in its terminal. For production deployment, see the [self-hosting guide](docs/getting-started/SELF_HOST_GUIDE.md).
+Open <http://localhost:20128>, sign in, and connect an available provider. Press `Ctrl+C` in the terminal to stop the development server.
 
-### Windows review launcher
+### Local review launcher
 
-[`Start-AntaresGateway.cmd`](Start-AntaresGateway.cmd) starts the development server on `127.0.0.1:20139` using the separate `_artifacts/antares-review-data` directory. It requires Node.js and installed project dependencies. This is a local review configuration with a fixed initial password defined in its launcher script; use your own credentials and deployment configuration for regular operation. Its initial password applies only when that data directory has no saved password.
+On Windows, [`Start-AntaresGateway.cmd`](Start-AntaresGateway.cmd) starts a development review instance on <http://127.0.0.1:20139/login>. Install Node.js and project dependencies first. This launcher uses a separate review data directory and a fixed initial password defined in its script; the initial password applies only when that directory has no saved password.
 
-## Connect a client
+## Connect an application
 
-1. In the dashboard, connect an eligible provider and test the connection.
-2. Create a gateway API key in the API key manager. Store the key when it is shown.
-3. Configure your client with the gateway URL, key, and a model visible to that key:
+1. Add a provider and test its connection in the dashboard.
+2. Create a gateway API key and save it when displayed. This key is separate from the upstream provider credential.
+3. Configure the application with your gateway address and an available model:
 
    ```text
    Base URL: http://localhost:20128/v1
@@ -63,7 +66,7 @@ Open <http://localhost:20128>, sign in, and add a provider in the dashboard. To 
    Model:    YOUR_AVAILABLE_MODEL
    ```
 
-4. Check the model list or make a chat request. Replace both placeholders with values from your installation:
+4. Verify the connection. Replace the placeholders with your own gateway key and an available model ID:
 
    ```bash
    curl http://localhost:20128/v1/models \
@@ -75,53 +78,45 @@ Open <http://localhost:20128>, sign in, and add a provider in the dashboard. To 
      -d '{"model":"YOUR_AVAILABLE_MODEL","messages":[{"role":"user","content":"Hello!"}]}'
    ```
 
-For the Windows review launcher, use port `20139` instead of `20128`. A client key is distinct from the upstream provider credential. `auto` routing requires an eligible configured target; connecting a provider alone does not guarantee a usable automatic route. See the [quick start](docs/getting-started/QUICK-START.md) and [API reference](docs/reference/API_REFERENCE.md).
+For the review launcher, use port `20139`. The `auto` model requires an eligible configured route; available routes depend on your provider connections and settings.
 
-## Changes from the previous Antares Gateway
+## What's changed since version 4
 
-The comparison below uses the locally available **Antares Gateway 3 Windows package** as its baseline: its interface exposes upstream connections, per-client keys, request records, price synchronization, budget reminders and database backup. These are existing capabilities of that package, not claims of new inventions. The new column describes capabilities present in this OmniRoute-based source tree; it does not establish a one-to-one replacement for every old workflow.
+This comparison uses the AntaresGateway 4 Windows package's visible interface and upgrade instructions as the baseline. Its interface already included provider connections, application-specific keys, usage records, model prices, budget reminders, and local database backups.
 
-| Area | Previous Antares Gateway 3 | Current AntaresGateway / OmniRoute 3.8.54 |
+| Area | AntaresGateway 4 | AntaresGateway 5.1.0 release line |
 | --- | --- | --- |
-| Runtime and delivery | Windows desktop package with a Python 3.12 runtime and WebView interface | Next.js/Node.js gateway and Electron desktop packaging; server and Docker deployment options |
-| Upstream connections | Manually configured OpenAI-compatible and Anthropic Messages connections in the interface | Provider catalog and provider-specific integrations, including API-key and supported OAuth connections |
-| Routing | The inspected interface exposes upstream configuration; its full routing behavior was not established | Model combos and automatic fallback, with circuit breakers, connection cooldowns and model-specific lockouts |
-| API capabilities | The inspected upstream form lists OpenAI-compatible and Anthropic protocols | Chat and Responses APIs plus embeddings, image, audio and other endpoints, depending on configured providers |
-| Agent integration | Per-application gateway keys and usage attribution | Gateway keys plus MCP, A2A, skills and memory integrations |
-| Usage and costs | Request records, CSV export, OpenRouter price sync, currency conversion and budget reminders | Usage, cost and request-log views; consult the dashboard and documentation for available workflows and settings |
-| Data | Local `monitor.sqlite3` under the old application's data directory, with a backup workflow | OmniRoute uses its own SQLite-backed data directory, normally `~/.omniroute/`; the review launcher uses a separate directory |
+| Application architecture | Windows package with a local desktop interface and Python runtime | Node.js gateway and Electron desktop packaging, with server deployment options |
+| Provider connections | Manual OpenAI-compatible and Anthropic Messages connections | Provider catalog with provider-specific integrations, API keys and supported OAuth connections |
+| Routing and availability | The visible interface manages upstream connections | Model combinations and fallback, plus circuit breakers, connection cooldowns and model lockouts |
+| API surface | The upstream form lists OpenAI-compatible and Anthropic protocols | Chat and Responses plus embeddings, image and audio endpoints, subject to provider support |
+| Agent capabilities | Application keys and per-application usage tracking | Gateway keys plus MCP, A2A, skills and memory integrations |
+| Usage and cost | Request history, CSV export, model price sync, currency conversion and budget reminders | Usage and cost dashboards and request logs; individual version 4 workflows should be verified separately |
+| Data | Local database under the previous Windows application data directory | A separate SQLite-backed data directory, configurable with `DATA_DIR` |
 
-The previous package's backend source and complete feature matrix were not available for this comparison. Verify any specific workflow against both versions before replacing an existing installation.
+The previous package's complete backend behavior was not available for comparison. Verify the workflows important to your installation before switching versions.
 
-## Data and migration
+## Upgrading and data
 
-The previous Windows package's cleanup instructions identify `%LOCALAPPDATA%\AntaresGateway` as its default data directory. The current server defaults to `~/.omniroute/`, or the directory specified by `DATA_DIR`. Keep a copy of the old data and credentials before changing installations.
+1. Back up the AntaresGateway 4 data directory, typically `%LOCALAPPDATA%\AntaresGateway`, and keep its credentials and database backup in a protected location.
+2. Install the new application separately and configure its provider connections and gateway keys.
+3. Test your clients, model selection, request logs and usage reporting before switching existing workflows.
+4. Keep the old backup until you have verified the replacement.
 
-An automatic migration of old connections, client keys, usage records, prices or settings has **not been established**. Treat the versions as separate installations: reconnect providers, create new gateway keys, and verify client requests and usage records before switching production workflows. Keep the old backup until you have verified the replacement.
+Automatic migration of version 4 connections, keys, usage records, pricing and settings has not been verified. The review launcher uses `_artifacts/antares-review-data`, separate from normal server data.
 
 ## Development
 
 ```bash
-npm run dev                 # Development server
-npm run build               # Production build
-npm run start               # Start the production server after building
-npm run electron:build:win  # Build Windows desktop artifacts
-npm run check:docs-all      # Documentation checks
+npm run dev                 # Start the development server
+npm run build               # Build the production server
+npm run start               # Start the built server
+npm run electron:build:win  # Build Windows desktop packages
+npm run check:docs-all      # Run documentation checks
 ```
 
-The codebase is organized around `src/` (Next.js application and API routes), `open-sse/` (routing, provider execution and translation), `electron/` (desktop application), and `tests/`. See [CONTRIBUTING.md](CONTRIBUTING.md) for development and testing guidance.
+The project contains the web application and API routes in `src/`, the request and routing engine in `open-sse/`, the desktop application in `electron/`, and tests in `tests/`.
 
-## Documentation
+## License
 
-- [Quick start](docs/getting-started/QUICK-START.md)
-- [Self-hosting guide](docs/getting-started/SELF_HOST_GUIDE.md)
-- [API reference](docs/reference/API_REFERENCE.md)
-- [Routing and Auto-Combo](docs/routing/AUTO-COMBO.md)
-- [Resilience guide](docs/architecture/RESILIENCE_GUIDE.md)
-- [MCP server](docs/frameworks/MCP-SERVER.md) · [A2A server](docs/frameworks/A2A-SERVER.md)
-- [Electron guide](docs/guides/ELECTRON_GUIDE.md) · [Environment variables](docs/ENVIRONMENT.md)
-- [Security](SECURITY.md) · [Contributing](CONTRIBUTING.md) · [Changelog](CHANGELOG.md)
-
-## License and credits
-
-This source tree is distributed under the [MIT License](LICENSE). OmniRoute was created by [Diego Souza](https://github.com/diegosouzapw) and its contributors; see the [upstream project](https://github.com/cheaper-inference/OmniRoute) and [third-party notices](THIRD_PARTY_NOTICES.md).
+See [LICENSE](LICENSE) and [third-party notices](THIRD_PARTY_NOTICES.md) for the applicable license and attribution information.
